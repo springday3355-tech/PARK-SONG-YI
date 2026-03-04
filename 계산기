@@ -1,0 +1,91 @@
+package chapter1.calculator;
+
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+public class Calculator {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        ArrayList<String> history = new ArrayList<>();
+
+        while (true) {
+            System.out.println("\n=== 계산기 메뉴 ===");
+            System.out.println("1. 계산하기");
+            System.out.println("2. 계산 이력 보기");
+            System.out.println("3. 이력 지우기");
+            System.out.println("0. 종료");
+            System.out.print("선택: ");
+
+            String menu = scanner.next();
+
+            if (menu.equals("0")) {
+                break;
+            }
+
+            // 1번: 계산하기
+            if (menu.equals("1")) {
+                try {
+                    System.out.print("첫 번째 숫자: ");
+                    double num1 = scanner.nextDouble();
+
+                    System.out.print("연산자 (+, -, *, /, %, ^): ");
+                    String op = scanner.next();
+                    
+                    System.out.print("두 번째 숫자: ");
+                    double num2 = scanner.nextDouble();
+
+                    double result = 0;
+                    boolean valid = true;
+
+                    switch (op) {
+                        case "+": result = num1 + num2; break;
+                        case "-": result = num1 - num2; break;
+                        case "*": result = num1 * num2; break;
+                        case "/":
+                            if (num2 == 0) {
+                                System.out.println("⚠️ 0으로 나눌 수 없습니다.");
+                                valid = false;
+                            } else result = num1 / num2;
+                            break;
+                        case "%": result = num1 % num2; break;
+                        case "^": result = Math.pow(num1, num2); break;
+                        default:
+                            System.out.println("⚠️ 지원하지 않는 연산자입니다.");
+                            valid = false;
+                    }
+
+                    if (valid) {
+                        String record = num1 + " " + op + " " + num2 + " = " + result;
+                        System.out.println("결과: " + record);
+                        history.add(record);
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("❌ 숫자를 입력해주세요.");
+                    scanner.nextLine(); // 입력 버퍼 청소
+                }
+            }
+            // 2번: 이력 보기
+            else if (menu.equals("2")) {
+                System.out.println("\n--- 연산 기록 ---");
+                if (history.isEmpty()) {
+                    System.out.println("기록이 없습니다.");
+                } else {
+                    for (String s : history) {
+                        System.out.println(s);
+                    }
+                }
+            } // 이력 지우기
+            else if (menu.equals("3")) {
+                history.clear();
+                System.out.println("모든 기록이 삭제되었습니다.");
+            }// 잘못된 메뉴
+            else {
+                System.out.println("잘못된 메뉴 선택입니다. 다시 입력해 주세요.");
+            }
+        }//while 끝
+
+        System.out.println("계산기를 종료합니다.");
+        scanner.close();
+    }
+}
